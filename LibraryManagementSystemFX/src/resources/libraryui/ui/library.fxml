@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Tooltip?>
+
+<BorderPane xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="libraryui.ui.LibraryController"
+            prefWidth="1000" prefHeight="650"
+            stylesheets="/styles/style_modern.css"
+            style="-fx-background-image: url('/images/background.png'); -fx-background-size: cover; -fx-background-position: center; -fx-background-repeat: no-repeat;">
+
+    <!-- Elegant Sidebar -->
+    <left>
+        <VBox spacing="15" alignment="TOP_CENTER" styleClass="sidebar" prefWidth="250">
+            <padding>
+                <Insets top="25" right="15" bottom="25" left="15"/>
+            </padding>
+            
+            <!-- Dashboard Title -->
+            <Label text="📚 Library Dashboard" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1B5E20; -fx-padding: 0 0 20 0;"/>
+            
+            <!-- Books Button -->
+            <Button styleClass="sidebar-button" onAction="#showBooksView" maxWidth="230">
+                <tooltip>
+                    <Tooltip text="View and manage library books"/>
+                </tooltip>
+                <graphic>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
+                            <Image url="/icons/books.png"/>
+                        </ImageView>
+                        <Label text="Books" styleClass="text-secondary"/>
+                    </HBox>
+                </graphic>
+            </Button>
+
+            <!-- Members Button -->
+            <Button styleClass="sidebar-button" onAction="#showMembersView" maxWidth="230">
+                <tooltip>
+                    <Tooltip text="View and manage library members"/>
+                </tooltip>
+                <graphic>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
+                            <Image url="/icons/member.png"/>
+                        </ImageView>
+                        <Label text="Members" styleClass="text-secondary"/>
+                    </HBox>
+                </graphic>
+            </Button>
+
+            <!-- Add Book Button -->
+            <Button styleClass="sidebar-button accent" onAction="#showAddBookView" maxWidth="230">
+                <tooltip>
+                    <Tooltip text="Add a new book to the library"/>
+                </tooltip>
+                <graphic>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
+                            <Image url="/icons/add.png"/>
+                        </ImageView>
+                        <Label text="Add Book" styleClass="text-secondary"/>
+                    </HBox>
+                </graphic>
+            </Button>
+
+            <!-- Register Member Button -->
+            <Button styleClass="sidebar-button accent" onAction="#showRegisterMemberView" maxWidth="230">
+                <tooltip>
+                    <Tooltip text="Register a new library member"/>
+                </tooltip>
+                <graphic>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
+                            <Image url="/icons/add.png"/>
+                        </ImageView>
+                        <Label text="Register Member" styleClass="text-secondary"/>
+                    </HBox>
+                </graphic>
+            </Button>
+
+            <!-- Borrow/Return Button -->
+            <Button styleClass="sidebar-button warning" onAction="#showBorrowReturnView" maxWidth="230">
+                <tooltip>
+                    <Tooltip text="Borrow or return books"/>
+                </tooltip>
+                <graphic>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
+                            <Image url="/icons/borrow.png"/>
+                        </ImageView>
+                        <Label text="Borrow / Return" styleClass="text-secondary"/>
+                    </HBox>
+                </graphic>
+            </Button>
+        </VBox>
+    </left>
+
+    <!-- Main Content Area -->
+    <center>
+        <StackPane fx:id="contentArea" styleClass="card">
+            <padding>
+                <Insets top="25" right="25" bottom="25" left="25"/>
+            </padding>
+            
+            <!-- Books View (default) -->
+            <VBox fx:id="booksView" spacing="15" visible="true">
+                <Label text="📚 Library Books" styleClass="heading-primary"/>
+                <TextField fx:id="bookSearchField" promptText="🔍 Search books..." styleClass="search-field"/>
+                <TableView fx:id="booksTable" prefHeight="300" styleClass="table-view">
+                    <columns>
+                        <TableColumn text="ID" fx:id="bookIdColumn" prefWidth="60"/>
+                        <TableColumn text="Cover" fx:id="bookCoverColumn" prefWidth="70"/>
+                        <TableColumn text="Title" fx:id="bookTitleColumn" prefWidth="180"/>
+                        <TableColumn text="Author" fx:id="bookAuthorColumn" prefWidth="120"/>
+                        <TableColumn text="Status" fx:id="bookStatusColumn" prefWidth="70"/>
+                        <TableColumn text="Borrower" fx:id="bookBorrowerColumn" prefWidth="100"/>
+                        <TableColumn text="Due Date" fx:id="bookDueDateColumn" prefWidth="100"/>
+                        <TableColumn text="Edit" fx:id="bookEditColumn" prefWidth="60"/>
+                        <TableColumn text="Delete" fx:id="bookDeleteColumn" prefWidth="65"/>
+                    </columns>
+                </TableView>
+                
+                <!-- Activity Log -->
+                <VBox spacing="10" styleClass="log-container">
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Label text="📋 Activity Log" styleClass="heading-secondary"/>
+                        <Button text="Generate Report" onAction="#handleGenerateReport" styleClass="button"/>
+                    </HBox>
+                    <TextArea fx:id="outputArea" editable="false" wrapText="true"
+                              styleClass="log-area" prefRowCount="12"/>
+                </VBox>
+            </VBox>
+
+            <!-- Members View -->
+            <VBox fx:id="membersView" spacing="15" visible="false">
+                <Label text="👤 Library Members" styleClass="heading-primary"/>
+                <TextField fx:id="memberSearchField" promptText="🔍 Search members..." styleClass="search-field"/>
+                <TableView fx:id="membersTable" prefHeight="350" styleClass="table-view">
+                    <columns>
+                        <TableColumn text="ID" fx:id="memberIdColumn" prefWidth="60"/>
+                        <TableColumn text="Name" fx:id="memberNameColumn" prefWidth="180"/>
+                        <TableColumn text="Password" fx:id="memberPasswordColumn" prefWidth="120"/>
+                        <TableColumn text="Balance ($)" fx:id="memberBalanceColumn" prefWidth="100"/>
+                        <TableColumn text="Edit" fx:id="memberEditColumn" prefWidth="60"/>
+                        <TableColumn text="Delete" fx:id="memberDeleteColumn" prefWidth="65"/>
+                    </columns>
+                </TableView>
+                
+                <!-- Fine Management -->
+                <VBox spacing="10" styleClass="form-container">
+                    <Label text="💰 Fine Management" styleClass="heading-secondary"/>
+                    <GridPane hgap="15" vgap="10" alignment="CENTER">
+                        <Label text="Member ID:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                        <TextField fx:id="fineMemberIdField" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="text-field" prefWidth="150"/>
+                        
+                        <Label text="Amount:" GridPane.rowIndex="0" GridPane.columnIndex="2" styleClass="form-label"/>
+                        <TextField fx:id="fineAmountField" GridPane.rowIndex="0" GridPane.columnIndex="3" styleClass="text-field" prefWidth="150"/>
+                        
+                        <HBox spacing="10" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="3" alignment="CENTER">
+                            <Button text="➕ Add Fine" onAction="#handleAddFine" styleClass="button warning"/>
+                            <Button text="💳 Pay Fine" onAction="#handlePayFine" styleClass="button"/>
+                            <Button text="🗑️ Clear Fine" onAction="#handleClearFine" styleClass="button"/>
+                        </HBox>
+                    </GridPane>
+                </VBox>
+                
+                <!-- Activity Log -->
+                <VBox spacing="10" styleClass="log-container">
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Label text="📋 Activity Log" styleClass="heading-secondary"/>
+                        <Button text="Generate Report" onAction="#handleGenerateReport" styleClass="button"/>
+                    </HBox>
+                    <TextArea fx:id="membersOutputArea" editable="false" wrapText="true"
+                              styleClass="log-area" prefRowCount="12"/>
+                </VBox>
+            </VBox>
+
+            <!-- Add Book View -->
+            <VBox fx:id="addBookView" spacing="15" visible="false">
+                <Label text="➕ Add New Book" styleClass="heading-primary"/>
+                <GridPane hgap="20" vgap="20" alignment="CENTER" styleClass="form-container">
+                    <Label text="📖 Book ID:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                    <TextField fx:id="bookIdField" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="text-field" prefWidth="200"/>
+                    
+                    <Label text="📝 Title:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                    <TextField fx:id="bookTitleField" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="text-field" prefWidth="200"/>
+                    
+                    <Label text="✍️ Author:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+                    <TextField fx:id="bookAuthorField" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="text-field" prefWidth="200"/>
+                    
+                    <Label text="🖼️ Cover:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="form-label"/>
+                    <HBox spacing="8" GridPane.rowIndex="3" GridPane.columnIndex="1">
+                        <TextField fx:id="bookCoverPathField" styleClass="text-field" prefWidth="280" editable="false" promptText="No image selected"/>
+                        <Button text="Choose image..." onAction="#handleChooseCover" styleClass="button"/>
+                    </HBox>
+                    
+                    <Button text="✅ Add Book" onAction="#handleAddBook" GridPane.rowIndex="4" GridPane.columnIndex="1" 
+                           maxWidth="180" styleClass="button"/>
+                </GridPane>
+                
+                <!-- Activity Log -->
+                <VBox spacing="10" styleClass="log-container">
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Label text="📋 Activity Log" styleClass="heading-secondary"/>
+                        <Button text="Generate Report" onAction="#handleGenerateReport" styleClass="button"/>
+                    </HBox>
+                    <TextArea fx:id="addBookOutputArea" editable="false" wrapText="true"
+                              styleClass="log-area" prefRowCount="12"/>
+                </VBox>
+            </VBox>
+
+            <!-- Register Member View -->
+            <VBox fx:id="registerMemberView" spacing="15" visible="false">
+                <Label text="👤 Register New Member" styleClass="heading-primary"/>
+                <GridPane hgap="20" vgap="20" alignment="CENTER" styleClass="form-container">
+                    <Label text="🆔 Member ID:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                    <TextField fx:id="memberIdField" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="text-field" prefWidth="200"/>
+                    
+                    <Label text="👤 Name:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                    <TextField fx:id="memberNameField" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="text-field" prefWidth="200"/>
+                    
+                    <Label text="🔒 Password:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+                    <TextField fx:id="memberPasswordField" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="password-field" prefWidth="200"/>
+                    
+                    <Button text="✅ Register Member" onAction="#handleRegisterMember" GridPane.rowIndex="3" GridPane.columnIndex="1" 
+                           maxWidth="180" styleClass="button"/>
+                </GridPane>
+                
+                <!-- Activity Log -->
+                <VBox spacing="10" styleClass="log-container">
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Label text="📋 Activity Log" styleClass="heading-secondary"/>
+                        <Button text="Generate Report" onAction="#handleGenerateReport" styleClass="button"/>
+                    </HBox>
+                    <TextArea fx:id="registerMemberOutputArea" editable="false" wrapText="true"
+                              styleClass="log-area" prefRowCount="12"/>
+                </VBox>
+            </VBox>
+
+            <!-- Borrow/Return View -->
+            <VBox fx:id="borrowReturnView" spacing="15" visible="false">
+                <Label text="🔄 Borrow / Return Books" styleClass="heading-primary"/>
+                <GridPane hgap="20" vgap="20" alignment="CENTER" styleClass="form-container">
+                    <Label text="👤 Member ID:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                    <TextField fx:id="borrowMemberIdField" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="text-field" prefWidth="200"/>
+                    
+                    <Label text="📚 Book ID:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                    <TextField fx:id="borrowBookIdField" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="text-field" prefWidth="200"/>
+                    
+                    <HBox spacing="20" GridPane.rowIndex="2" GridPane.columnIndex="1" alignment="CENTER">
+                        <Button text="📖 Borrow Book" onAction="#handleBorrowBook" styleClass="button"/>
+                        <Button text="📚 Return Book" onAction="#handleReturnBook" styleClass="button warning"/>
+                    </HBox>
+                </GridPane>
+                
+                <!-- Due Date Information -->
+                <VBox spacing="10" styleClass="form-container">
+                    <Label text="📅 Due Date Information" styleClass="heading-secondary"/>
+                    <GridPane hgap="15" vgap="10" alignment="CENTER">
+                        <Label text="Book ID:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+                        <TextField fx:id="dueDateBookIdField" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="text-field" prefWidth="150"/>
+                        
+                        <Button text="🔍 Check Due Date" onAction="#handleCheckDueDate" GridPane.rowIndex="0" GridPane.columnIndex="2" styleClass="button"/>
+                        
+                        <Label text="Due Date:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+                        <Label fx:id="dueDateLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="text-field" prefWidth="150" text="Not available"/>
+                    </GridPane>
+                </VBox>
+                
+                <!-- Activity Log -->
+                <VBox spacing="10" styleClass="log-container">
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Label text="📋 Activity Log" styleClass="heading-secondary"/>
+                        <Button text="Generate Report" onAction="#handleGenerateReport" styleClass="button"/>
+                    </HBox>
+                    <TextArea fx:id="borrowReturnOutputArea" editable="false" wrapText="true"
+                              styleClass="log-area" prefRowCount="12"/>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>
